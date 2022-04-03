@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <!-- <link rel="stylesheet" href="/vue-project/vue.css"> -->
+    <style>
+      .box {
+    background-color: purple;
+    height: 200px;
+    width: 200px;
+    margin-top: 4em;
+}
+.box1 {
+    background-color: red;
+    height: 200px;
+    width: 200px;
+    margin-top: 10em;
+}
+.box2 {
+    background-color: blue;
+    height: 200px;
+    width: 200px;
+    margin-top: 15em;
+}
+input{
+  margin: 10px;
+  display: block;
+}
+[v-cloak]{
+  display: none;
+}
+    </style>
+  </head>
+  <body>
+    <div id="app" v-cloak>
+    <!-- {{greeting}}
+      <input @keyup.enter="greet(greeting + '!!!!')" v-model="greeting" /> -->
+
+ <!-- <login-form></login-form> -->
+
+
+    <button @click="toggleBox"  >Show Box</button>
+    <test-box v-if="isVisible" /> 
+  </div>
+
+    <script src="https://unpkg.com/vue@3"></script>
+    <script>
+     let app = Vue.createApp({
+       data : function(){
+         return{
+         //  greeting: 'Hello Vue 3!',
+           isVisible: false,
+                  }
+       },
+       methods: {
+         toggleBox(){
+         /*  if(this.greeting.length > 2){
+            this.isVisible = true;
+           }
+           else{
+           this.isVisible = false;
+           } */
+           this.isVisible = !this.isVisible;
+          },
+       },
+       updated() {
+         console.log('updated');
+       },
+     })
+     app.component('test-box',{
+       template: `
+       <div class="box"></div>
+       `,
+       created() {
+         console.log('created')
+       },
+       mounted() {
+        console.log('mounted')
+       },
+       unmounted() {
+        console.log('unmounted')
+       },
+       data : function(){
+         return{
+           isVisible: false,
+                  }
+       },
+     })
+     app.component('login-form',{
+       template: `
+       <form @submit.prevent="handleSubmit">
+        <h1>{{title}}</h1>
+        <custom-input 
+         v-for="(input,i) in inputs" 
+        :key ="i"
+         v-bind:label="input.label" 
+         v-model="input.value"
+         :type="input.type"
+         />
+        <button> Sign In </button>
+        <a> Lifecycle </a>
+        </form>
+       ` ,
+       components: ['custom-input'],
+       data(){
+         return{
+           title:'Login Form',
+           inputs: [{
+             label: 'Email',
+             value:'',
+             type:'email'
+           },
+          {
+            label: 'Password',
+            value:'',
+            type:'password'
+          }]
+         }
+       },
+       methods: {
+         handleSubmit(){
+           console.log("email is " + this.inputs[0].value);
+           console.log("password is " + this.inputs[1].value);
+           
+         }
+
+       }
+     })
+     app.component('custom-input', {
+     template:`
+     <label>
+      {{label}}
+      <input :type ="type" v-model="inputValue">
+      </label>
+     `
+     ,
+     computed: {
+      inputValue:{
+        get() {
+       return this.modelValue
+        },
+        set(value){
+      //  console.log(value)
+        this.$emit('update:modelValue',value)
+        }
+/* $emit - what it does is emit events that other components can listen to & pass data around the application*/
+      }
+     }, 
+     //this is an (computed)object where we can put variable names as keys, and whenever the value of the variable changes 
+     //it runs both getters to get the value and setters to set the new value.
+    props: ['label', 'modelValue','type'],
+    /* the variable modelValue is from the template in the parent component where we used v-model because e,g v-model="email"
+     also binds modelValue="email" under the hood therefore we can use this to share info between components*/
+  /*  data(){
+      return{
+        inputValue:''
+      }
+    } */
+     })
+     app.mount('#app')
+    </script>
+ <!--  <script type="module" src="/src/main.ts"></script> -->
+  </body>
+</html>
