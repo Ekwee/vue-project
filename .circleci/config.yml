@@ -19,5 +19,5 @@ workflows:
   my-workflow:
     jobs:
       - hello-job
-      - cypress/run:
+      - cypress-io/run:
          yarn: true
