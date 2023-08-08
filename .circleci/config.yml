@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   win: circleci/windows@5.0.0 # The Windows orb gives you everything you need to start using the Windows executor.
+  cypress: cypress-io/cypress@1
 
 jobs:
   hello-job:
@@ -18,3 +19,5 @@ workflows:
   my-workflow:
     jobs:
       - hello-job
+      - cypress/run:
+         yarn: true
